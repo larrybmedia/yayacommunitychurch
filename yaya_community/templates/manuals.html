@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="page-header">Resource Library</h1>
+    <p class="lead text-muted">Access and download official YAYA manuals, study guides, and protocol documents.</p>
+</div>
+
+<div class="row">
+    <!-- Example Manual Card 1 -->
+    <div class="row">
+    {% for manual in manuals %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm border-left-primary">
+            <div class="card-body text-center">
+                <i class="fas fa-file-pdf fa-4x text-danger mb-3"></i>
+                <h5 class="font-weight-bold">{{ manual.title }}</h5>
+                <p class="small text-muted">{{ manual.description }}</p>
+                <div class="badge badge-light mb-3">{{ manual.category }}</div>
+                <hr>
+                <a href="{{ url_for('static', filename='uploads/manuals/' + manual.filename) }}" class="btn btn-outline-primary btn-sm btn-block" download>
+                    <i class="fas fa-download mr-1"></i> Download
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+    <!-- Example Manual Card 2 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm border-left-success">
+            <div class="card-body text-center">
+                <i class="fas fa-bible fa-4x text-success mb-3"></i>
+                <h5 class="font-weight-bold">Study Outline</h5>
+                <p class="small text-muted">Weekly interactive study outlines for youth fellowships.</p>
+                <hr>
+                <a href="#" class="btn btn-outline-success btn-sm btn-block">
+                    <i class="fas fa-download mr-1"></i> Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Example Manual Card 3 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm border-left-warning">
+            <div class="card-body text-center">
+                <i class="fas fa-users-cog fa-4x text-warning mb-3"></i>
+                <h5 class="font-weight-bold">Protocols & Ethics</h5>
+                <p class="small text-muted">Code of conduct and operational protocols for all members.</p>
+                <hr>
+                <a href="#" class="btn btn-outline-warning btn-sm btn-block">
+                    <i class="fas fa-download mr-1"></i> Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Section for Admins only (Optional Logic) -->
+<div class="mt-5 p-4 bg-light rounded text-center border">
+    <h5 class="font-weight-bold">Need a specific manual?</h5>
+    <p class="text-muted">If you can't find a document, contact your regional administrator or the national office.</p>
+    <a href="mailto:admin@yayacommunity.com" class="btn btn-dark btn-sm px-4">Request a Resource</a>
+</div>
+{% endblock %}

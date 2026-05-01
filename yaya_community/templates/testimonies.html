@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="page-header">Testimonies of Grace</h1>
+    <p class="lead text-muted">Sharing the goodness of God within the YAYA community.</p>
+</div>
+
+<div class="row mt-5">
+    <!-- Form Side -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 sticky-top" style="top: 100px;">
+            <div class="card-body">
+                <h5 class="font-weight-bold">Share Your Story</h5>
+                <form action="{{ url_for('main.submit_testimony') }}" method="POST">
+                    <input type="text" name="title" class="form-control mb-3" placeholder="Title of Testimony" required>
+                    <textarea name="content" class="form-control mb-3" rows="5" placeholder="What has God done?" required></textarea>
+                    <button type="submit" class="btn btn-primary btn-block">Publish Testimony</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feed Side -->
+    <div class="col-md-8">
+        {% for testimony in testimonies %}
+        <div class="card mb-4 border-0 shadow-sm border-left-success">
+            <div class="card-body">
+                <h4 class="card-title">{{ testimony.title }}</h4>
+                <p class="card-text italic">"{{ testimony.content }}"</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-primary font-weight-bold">— {{ testimony.user_name }}</span>
+                    <small class="text-muted">{{ testimony.date_posted }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

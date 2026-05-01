@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Youth Marketplace</h2>
+    
+    {% if local_biz %}
+        <h4 class="text-success">Available in {{ session.get('branch_name') }}</h4>
+        <div class="row">
+            {% for biz in local_biz %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-success">
+                        <div class="card-body">
+                            <h5>{{ biz.business_name }}</h5>
+                            <p class="small text-muted">{{ biz.category }}</p>
+                            <p>{{ biz.description }}</p>
+                            <a href="https://wa.me/{{ biz.whatsapp_number }}" class="btn btn-success btn-block">WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if other_biz %}
+        <h4 class="text-muted mt-4">Other YAYA Businesses</h4>
+        <div class="row">
+            {% for biz in other_biz %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6>{{ biz.business_name }}</h6>
+                            <a href="https://wa.me/{{ biz.whatsapp_number }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

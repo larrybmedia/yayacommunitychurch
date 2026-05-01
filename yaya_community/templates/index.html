@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Announcements</h2>
+
+    <a href="{{ url_for('main.about') }}" class="btn btn-primary btn-lg shadow-sm">
+    <i class="fas fa-info-circle mr-2"></i>Learn Our Vision
+</a>
+
+    <div class="row">
+        <!-- Section 1: National Posts -->
+        {% for post in global_posts %}
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-sm border-left-primary">
+                <div class="card-body">
+                    <span class="badge badge-primary mb-2">National Update</span>
+                    <h5 class="card-title font-weight-bold">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Section 2: Local Posts -->
+        {% for post in local_posts %}
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-sm border-left-success">
+                <div class="card-body">
+                    <span class="badge badge-success mb-2">
+                        Local Update: {{ session.get('branch_name', 'Current Branch') }}
+                    </span>
+                    <h5 class="card-title font-weight-bold">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Section 3: Empty State -->
+        {% if not global_posts and not local_posts %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted font-italic">No updates available at the moment.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

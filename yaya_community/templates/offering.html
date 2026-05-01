@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-5" data-aos="fade-down">
+    <h1 class="font-weight-bold text-primary">Giving & Partnerships</h1>
+    <p class="text-muted">"Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver." — 2 Cor 9:7</p>
+</div>
+
+<div class="row">
+    <!-- TITHE & OFFERING CARD -->
+    <div class="col-md-6 mb-4" data-aos="zoom-in" data-delay="100">
+        <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
+            <div class="card-body text-center p-5">
+                <div class="icon-box mb-4">
+                    <i class="fas fa-hand-holding-heart fa-3x text-primary"></i>
+                </div>
+                <h4 class="font-weight-bold">Tithe & Offering</h4>
+                <p class="text-muted small">Support the ministry and fulfill your covenant obligations.</p>
+                
+                <div class="bg-light p-3 rounded mb-3">
+                    <span class="d-block small text-uppercase font-weight-bold text-muted">Account Number</span>
+                    <h3 class="font-weight-bold mb-0" id="offeringAcc">1234567890</h3>
+                    <p class="mb-0 text-primary small">Zenith Bank | RCCG YAYA</p>
+                </div>
+                
+                <button class="btn btn-outline-primary btn-block font-weight-bold" onclick="copyToClipboard('1234567890')">
+                    <i class="fas fa-copy mr-2"></i>Copy Account Number
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT & SEED CARD -->
+    <div class="col-md-6 mb-4" data-aos="zoom-in" data-delay="200">
+        <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
+            <div class="card-body text-center p-5">
+                <div class="icon-box mb-4">
+                    <i class="fas fa-seedling fa-3x text-warning"></i>
+                </div>
+                <h4 class="font-weight-bold">Special Projects</h4>
+                <p class="text-muted small">Partner with us for youth empowerment and facility expansion.</p>
+                
+                <div class="bg-light p-3 rounded mb-3">
+                    <span class="d-block small text-uppercase font-weight-bold text-muted">Account Number</span>
+                    <h3 class="font-weight-bold mb-0" id="projectAcc">0987654321</h3>
+                    <p class="mb-0 text-warning small">Access Bank | RCCG YAYA Project</p>
+                </div>
+                
+                <button class="btn btn-outline-warning btn-block font-weight-bold" onclick="copyToClipboard('0987654321')">
+                    <i class="fas fa-copy mr-2"></i>Copy Account Number
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OPTIONAL: ONLINE PAYMENT BUTTON -->
+<div class="text-center mt-4" data-aos="fade-up">
+    <div class="alert alert-warning border-0 shadow-sm d-inline-block px-5">
+        <p class="mb-2 font-weight-bold">Prefer to give online via Card?</p>
+        <a href="https://paystack.com/pay/your-link" class="btn btn-dark btn-lg shadow">
+            <i class="fas fa-credit-card mr-2"></i>Pay via Paystack
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Account number copied to clipboard!");
+        });
+    }
+</script>
+{% endblock %}
