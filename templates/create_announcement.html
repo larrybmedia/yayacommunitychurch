@@ -1,0 +1,42 @@
+<form action="{{ url_for('main.create_announcement') }}" method="POST" enctype="multipart/form-data">
+    
+    <!-- Title -->
+    <div class="mb-3">
+        <label for="title" class="form-label">Announcement Title</label>
+        <input type="text" name="title" id="title" class="form-control" required>
+    </div>
+
+    <!-- Content -->
+    <div class="mb-3">
+        <label for="content" class="form-label">Announcement Content</label>
+        <textarea name="content" id="content" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="mb-3">
+        <label for="image" class="form-label">Upload Image</label>
+        <input type="file" name="image" id="image" class="form-control" accept="image/*">
+    </div>
+
+    <hr class="my-4">
+    <h5 class="text-muted mb-3">Video Attachment Options (Optional)</h5>
+
+    <!-- Option A: Direct Video File Upload -->
+    <div class="mb-3">
+        <label for="video_file" class="form-label">Upload Video File (MP4, MKV, etc.)</label>
+        <input type="file" name="video_file" id="video_file" class="form-control" accept="video/*">
+        <small class="text-muted">Directly upload a video clip from your local drive.</small>
+    </div>
+
+    <!-- Option B: External Stream/YouTube Link -->
+    <div class="mb-3">
+        <label for="video" class="form-label">Video URL (YouTube link)</label>
+        <input type="url" name="video" id="video" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+        <small class="text-muted">Or paste an external video link here if you do not want to upload a raw file.</small>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary w-100">Publish Announcement</button>
+    </div>
+</form>

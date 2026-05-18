@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center py-4">
+    <h1 class="page-header font-weight-bold" style="color: var(--primary-blue);">Testimonies of Grace</h1>
+    <p class="lead text-muted">Sharing the goodness of God within the YAYA community.</p>
+</div>
+
+<div class="row mt-4">
+    <!-- LEFT SIDE: SHARE STORY FORM -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 sticky-top" style="top: 100px; border-radius: 15px;">
+            <div class="card-body p-4">
+                <h5 class="font-weight-bold mb-3"><i class="fas fa-pen-fancy mr-2 text-primary"></i>Share Your Story</h5>
+        
+                    <!-- Add this note before the button -->
+<div class="alert alert-info py-2 mb-3" style="border-radius: 10px; border: none; background-color: #f0f7ff;">
+    <small class="text-primary font-weight-bold">
+        <i class="fas fa-info-circle mr-1"></i> 
+        Note: To ensure a safe community, all testimonies are reviewed by our team before going live.
+    </small>
+</div>
+
+<!-- Replace your current button/link with this -->
+    <a href="{{ url_for('main.share_story') }}" class="btn btn-primary">
+        Submit Testimony
+    </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: TESTIMONY FEED -->
+    <div class="col-md-8">
+        <h3 class="mb-4 text-primary"><i class="fas fa-quote-left mr-2"></i>Recent Testimonies</h3>
+        
+        <div class="testimony-list">
+            {% if testimonies %}
+                {% for t in testimonies %}
+                    <div class="card mb-4 shadow-sm border-0" style="border-left: 5px solid var(--primary-blue) !important; border-radius: 10px;">
+                        <div class="card-body">
+                            <!-- Title & Branch Badge -->
+                            <h5 class="font-weight-bold text-dark mb-1">{{ t.title }}</h5>
+                            {% if t.branch %}
+                                <div class="mb-3">
+                                    <span class="badge badge-pill badge-light border text-primary px-2">
+                                        <i class="fas fa-church mr-1"></i> {{ t.branch.name }}
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            <blockquote class="blockquote mb-0">
+                                <p class="mb-3" style="font-style: italic; color: #444; font-size: 1.05rem;">
+                                    "{{ t.content }}"
+                                </p>
+                                <footer class="blockquote-footer d-flex align-items-center">
+                                    <span>
+                                        <strong class="text-primary">{{ t.name }}</strong> 
+                                        <span class="mx-1">|</span>
+                                        <small class="text-muted">{{ t.date_posted.strftime('%B %d, %Y') if t.date_posted else 'Recently' }}</small>
+                                    </span>
+                                    <!-- ADMIN ONLY: Delete Action 🗑️ -->
+                                {% if current_user.is_authenticated and current_user.is_admin %}
+                                <a href="{{ url_for('main.delete_testimony', id=t.id) }}" 
+                                   class="btn btn-sm btn-outline-danger ml-auto" 
+                                   onclick="return confirm('Are you sure you want to delete this testimony?')">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                                {% endif %}
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 bg-white rounded shadow-sm">
+                    <p class="text-muted">No testimonies shared yet. Be the first!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

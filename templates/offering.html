@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5"> <!-- Added container for proper alignment -->
+    <div class="text-center mb-5" data-aos="fade-down">
+        <h1 class="font-weight-bold text-primary">Giving & Partnerships</h1>
+        <p class="text-muted">"Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver." — 2 Cor 9:7</p>
+    </div>
+
+    <div class="row">
+        <div class="row">
+    <!-- TITHE & OFFERING CARD -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center p-5">
+                <h4 class="font-weight-bold">Tithe & Offering</h4>
+                <div class="bg-light p-3 rounded mb-3">
+                    <h3 class="font-weight-bold mb-0">{{ tithe.account_number if tithe else '1234567890' }}</h3>
+                    <p class="mb-0 text-primary small">{{ tithe.bank_name if tithe else 'Zenith Bank' }} | RCCG YAYA</p>
+                </div>
+                <button class="btn btn-outline-primary btn-block" onclick="copyToClipboard('{{ tithe.account_number if tithe else "1234567890" }}')">
+                    <i class="fas fa-copy mr-2"></i>Copy Account Number
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT & SEED CARD -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center p-5">
+                <h4 class="font-weight-bold">Special Projects</h4>
+                <div class="bg-light p-3 rounded mb-3">
+                    <h3 class="font-weight-bold mb-0">{{ project.account_number if project else '0987654321' }}</h3>
+                    <p class="mb-0 text-warning small">{{ project.bank_name if project else 'Access Bank' }} | RCCG YAYA Project</p>
+                </div>
+                <button class="btn btn-outline-warning btn-block" onclick="copyToClipboard('{{ project.account_number if project else "0987654321" }}')">
+                    <i class="fas fa-copy mr-2"></i>Copy Account Number
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- OPTIONAL: ONLINE PAYMENT BUTTON -->
+    <div class="text-center mt-4" data-aos="fade-up">
+        <div class="alert alert-warning border-0 shadow-sm d-inline-block px-5">
+            <p class="mb-2 font-weight-bold">Prefer to give online via Card?</p>
+            <a href="https://paystack.com/pay/your-link" class="btn btn-dark btn-lg shadow">
+                <i class="fas fa-credit-card mr-2"></i>Pay via Paystack
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function copyToClipboard(text) {
+        if (!text) {
+            alert("No account number available to copy.");
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Account number " + text + " copied to clipboard!");
+        });
+    }
+</script>
+{% endblock %}
