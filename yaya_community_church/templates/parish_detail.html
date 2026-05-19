@@ -1,0 +1,67 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Parish Name Header -->
+    <div class="text-center mb-5" data-aos="fade-down">
+        <h1 class="display-4 font-weight-bold" style="color: #004a99;">{{ parish.name }}</h1>
+        <p class="lead text-muted">Welcome to our Parish Portal</p>
+    </div>
+
+    <div class="row">
+        <!-- 1. YouTube Live Stream Section -->
+        <div class="col-lg-8 mb-4" data-aos="fade-right">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-danger text-white font-weight-bold">
+                    <i class="fab fa-youtube mr-2"></i> Live Stream
+                </div>
+                <div class="card-body p-0">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        {% if parish.youtube_link %}
+                            <iframe 
+                                width="100%" 
+                                height="400" 
+                                src="{{ parish.youtube_link }}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        {% else %}
+                            <div class="d-flex flex-column align-items-center justify-content-center bg-light h-100 p-5">
+                                <i class="fas fa-video-slash fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No live stream available at this time.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Parish Updates / Calendar Section -->
+        <div class="col-lg-4" data-aos="fade-left">
+            <div class="card shadow-lg border-0 h-100">
+                <div class="card-header bg-primary text-white font-weight-bold">
+                    <i class="fas fa-calendar-alt mr-2"></i> Parish Updates
+                </div>
+                <div class="card-body">
+                    {% if parish.calendar_updates and parish.calendar_updates != 'None' %}
+                        <div class="update-content">
+                            {{ parish.calendar_updates | safe }}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-info-circle text-muted mb-2"></i>
+                            <p class="text-muted italic">No new updates scheduled for this week.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-0 text-center pb-4">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary btn-sm btn-block">
+                        <i class="fas fa-search mr-1"></i> Find Another Parish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

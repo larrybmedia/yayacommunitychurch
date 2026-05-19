@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .split-container {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+        margin: -1.5rem; 
+        overflow: hidden;
+    }
+
+    .split {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        transition: flex 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        cursor: pointer;
+    }
+
+    .split:hover {
+        flex: 3;
+    }
+
+    .admin-side {
+        background: #f8f9fa;
+        border-right: 1px solid #ddd;
+    }
+
+    /* ⚫ SUPERADMIN SECTION STYLES */
+    .superadmin-side {
+        background: #212529; /* Deep dark background */
+    }
+
+    .superadmin-card {
+        background: #343a40 !important; /* Lighter charcoal for the card background */
+        border: 1px solid #495057;
+        color: #ffffff !important; /* Pure white text */
+    }
+
+    .superadmin-card h4 {
+        color: #ffffff !important;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    /* Styling inputs for the dark theme */
+    .superadmin-card .form-control {
+        background-color: #495057;
+        border: 1px solid #6c757d;
+        color: white;
+    }
+
+    .superadmin-card .form-control::placeholder {
+        color: #adb5bd;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 350px;
+        transition: transform 0.2s ease;
+    }
+
+    .signup-link-wrapper {
+        text-align: right;
+        margin-bottom: 10px;
+    }
+
+    .signup-link-wrapper a {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #0d6efd;
+    }
+</style>
+<div class="container mt-3" style="position: absolute; z-index: 1000; width: 100%; max-width: 400px; left: 50%; transform: translateX(-50%);">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show shadow" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</div>
+<div class="split-container">
+
+    <!-- 🔵 ADMIN LOGIN SIDE -->
+    <div class="split admin-side">
+        <div class="login-card">
+            <div class="signup-link-wrapper">
+                <span class="text-muted">New Admin?</span> 
+                <a href="{{ url_for('main.signup') }}">Create Account</a>
+            </div>
+
+            <div class="card shadow p-4">
+                <h4 class="text-center mb-4 text-dark">Admin Login</h4>
+
+                <!-- For BOTH Admin and SuperAdmin forms, change the action -->
+                    <form method="POST" action="{{ url_for('main.login') }}">
+                    
+                    <input type="hidden" name="role" value="admin">
+                    <div class="mb-3">
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button class="btn btn-primary w-100 py-2">Login as Admin</button>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('main.forgot_password') }}" class="text-decoration-none">Forgot Password?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚫ SUPER ADMIN LOGIN SIDE -->
+    <div class="split superadmin-side">
+        <!-- Added .superadmin-card class here -->
+        <div class="card shadow p-4 login-card superadmin-card">
+            <h4 class="text-center mb-4">Super Admin</h4>
+
+            <!-- For BOTH Admin and SuperAdmin forms, change the action -->
+                <form method="POST" action="{{ url_for('main.login') }}">
+                <input type="hidden" name="role" value="superadmin"> <!-- 👈 THIS MUST BE HERE -->
+    
+                    <div class="mb-3">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100">Login as Super Admin</button>
+                    <div class="text-center mt-3">
+                    <a href="{{ url_for('main.forgot_password') }}" class="text-info text-decoration-none opacity-75">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

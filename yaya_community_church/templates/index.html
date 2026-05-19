@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- =========================
+         LIVE STREAM SECTION (GLOBAL + BRANCH)
+    ========================== -->
+
+    {% if main_stream and main_stream.url or (branch_stream and branch_stream.youtube_link) %}
+
+        <!-- GLOBAL LIVE STREAM -->
+        {% if main_stream and main_stream.url %}
+        <div class="container mt-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        🔴 LIVE NOW - RCCG YAYA BROADCAST
+                    </h4>
+
+                    <span class="badge badge-light text-danger font-weight-bold">
+                        LIVE
+                    </span>
+                </div>
+
+                <div class="card-body">
+
+                    <h5 class="mb-3 font-weight-bold">
+                        {{ main_stream.title }}
+                    </h5>
+
+                    <div class="embed-responsive embed-responsive-16by9">
+
+                        <iframe
+                            class="embed-responsive-item"
+                            src="{{ main_stream.url }}"
+                            allow="autoplay; encrypted-media"
+                            allowfullscreen>
+                        </iframe>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
+        <!-- BRANCH LIVE STREAM -->
+        {% if branch_stream and branch_stream.youtube_link %}
+        <div class="container mt-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        📍 PARISH LIVE STREAM
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="embed-responsive embed-responsive-16by9">
+
+                        <iframe
+                            class="embed-responsive-item"
+                            src="{{ branch_stream.youtube_link }}"
+                            allowfullscreen>
+                        </iframe>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
+    {% else %}
+
+        <!-- FALLBACK -->
+        <div class="alert alert-info text-center">
+            <h5>No Live Broadcast at the moment</h5>
+            <p>Please check back later or follow announcements.</p>
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         POSTS SECTION
+    ========================== -->
+    <div class="row mt-4">
+
+        {% for post in posts %}
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-sm border-left-primary">
+                <div class="card-body">
+                    <span class="badge badge-primary mb-2">Update</span>
+                    <h5 class="card-title font-weight-bold">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- =========================
+             ANNOUNCEMENTS
+        ========================== -->
+        <div class="col-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+
+                    <h4>Announcements</h4>
+
+                    {% for announcement in announcements %}
+
+                    <div class="card mb-4 announcement-card">
+
+                        <div class="card-body">
+
+                            <h4 class="announcement-title">
+                                {{ announcement.title }}
+                            </h4>
+
+                            <p class="announcement-content">
+                                {{ announcement.content }}
+                            </p>
+
+                            <!-- IMAGE -->
+                            {% if announcement.image %}
+                            <img src="{{ url_for(
+                            'static',
+                            filename='uploads/' + announcement.image
+                            ) }}"
+                            class="img-fluid rounded mb-3">
+                            {% endif %}
+
+                            <!-- VIDEO FILE -->
+                            {% if announcement.video_file %}
+                            <video width="100%"
+                                controls>
+
+                                <source src="{{ url_for(
+                                'static',
+                                filename='uploads/' + announcement.video_file
+                                ) }}">
+
+                            </video>
+                            {% endif %}
+
+                            <!-- VIDEO LINK -->
+                            {% if announcement.video %}
+                            <iframe width="100%"
+                                    height="315"
+                                    src="{{ announcement.video|replace('watch?v=','embed/') }}"
+                                    frameborder="0"
+                                    allowfullscreen>
+                            </iframe>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        {% if not posts %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted font-italic">
+                No updates available at the moment.
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

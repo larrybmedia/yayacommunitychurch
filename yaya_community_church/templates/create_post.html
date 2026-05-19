@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <h1 class="page-header">Create New Announcement</h1>
+
+        <div class="card shadow-sm p-4">
+
+            <form action="{{ url_for('main.create_post') }}" method="POST">
+
+                <!-- TITLE -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Headline</label>
+                    <input type="text" name="title" class="form-control"
+                           placeholder="e.g. Youth Convention 2026" required>
+                </div>
+
+                <!-- AUDIENCE -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Target Audience</label>
+                    <select name="is_global" class="form-control">
+                        <option value="1">Global (Visible to all Branches)</option>
+                        <option value="0">Local (Only for {{ session.get('branch_name', 'Selected Branch') }})</option>
+                    </select>
+                </div>
+
+                <!-- CONTENT -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Content</label>
+                    <textarea name="content" class="form-control" rows="8"
+                              placeholder="Write the details here..." required></textarea>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('main.admin') }}" class="btn btn-light">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-5">
+                        Publish Announcement
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

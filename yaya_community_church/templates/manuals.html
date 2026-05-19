@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="page-header">Resource Library</h1>
+    <p class="lead text-muted">Access and download official YAYA manuals, study guides, and protocol documents.</p>
+</div>
+
+<div class="row">
+    {% for manual in manuals %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm border-left-primary">
+            <div class="card-body text-center">
+                <i class="fas {{ manual.icon_class }} fa-4x text-primary mb-3"></i>
+                <h5 class="font-weight-bold">{{ manual.title }}</h5>
+                <p class="small text-muted">{{ manual.description }}</p>
+                <div class="badge badge-light mb-3">{{ manual.category }}</div>
+                
+                <div class="badge 
+                    {% if manual.category == 'Fellowship' %}badge-success
+                    {% elif manual.category == 'Policy' %}badge-info
+                    {% else %}badge-secondary{% endif %} 
+                    mb-3">
+                    {{ manual.category }}
+                </div>
+                
+                <hr>
+                
+                <!-- Download Link -->
+                <a href="{{ url_for('static', filename='uploads/manuals/' + manual.filename) }}" 
+                   class="btn btn-outline-primary btn-sm btn-block mb-2" download>
+                    <i class="fas fa-download mr-1"></i> Download
+                </a>
+
+                <!-- Admin Delete Logic moved INSIDE the loop 📥 -->
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                    <a href="{{ url_for('main.delete_manual', id=manual.id) }}" 
+                       class="btn btn-outline-danger btn-sm btn-block" 
+                       onclick="return confirm('Are you sure you want to delete this resource?')">
+                        <i class="fas fa-trash-alt mr-1"></i> Delete
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Upload Section for Admins only (Optional Logic) -->
+<div class="mt-5 p-4 bg-light rounded text-center border">
+    <h5 class="font-weight-bold">Need a specific manual?</h5>
+    <p class="text-muted">If you can't find a document, contact your regional administrator or the national office.</p>
+    <a href="mailto:admin@yayacommunity.com" class="btn btn-dark btn-sm px-4">Request a Resource</a>
+</div>
+{% endblock %}

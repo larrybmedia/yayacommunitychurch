@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🏛️ SuperAdmin Command Center</h2>
+        <span class="badge badge-danger p-2">Global Access</span>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white border-0 shadow-sm">
+                <div class="card-body">
+                    <h6>Total Branches</h6>
+                    <h3>{{ branches|length }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white border-0 shadow-sm">
+                <div class="card-body">
+                    <h6>Active Jobs</h6>
+                    <h3>{{ jobs_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white border-0 shadow-sm">
+                <div class="card-body">
+                    <h6>Manuals</h6>
+                    <h3>{{ manuals_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white border-0 shadow-sm">
+                <div class="card-body">
+                    <h6>Logs</h6>
+                    <h3>{{ logs_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MANAGEMENT SECTION -->
+    <div class="row">
+
+        <!-- BRANCHES -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white font-weight-bold">
+                    📍 Branch Management
+                </div>
+
+                <div class="card-body">
+                    <p class="text-muted">Manage church branches nationwide.</p>
+
+                    <a href="{{ url_for('main.create_branch') }}"
+                       class="btn btn-outline-primary btn-sm mb-3">
+                        Add New Branch
+                    </a>
+
+                    <ul class="list-group list-group-flush">
+                        {% for branch in branches %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div>
+                                <strong>{{ branch.name }}</strong><br>
+                                <small class="text-muted">{{ branch.location }}</small>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- JOBS -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm border-warning">
+                <div class="card-header bg-warning font-weight-bold">
+                    💼 Global Job Board
+                </div>
+
+                <div class="card-body">
+                    <p class="text-muted">Post jobs visible across all branches.</p>
+
+                    <a href="{{ url_for('post_job') }}"
+                       class="btn btn-warning btn-sm font-weight-bold">
+                        Post Job
+                    </a>
+
+                    <a href="{{ url_for('main.jobs') }}"
+                       class="btn btn-link btn-sm">
+                        Manage Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MANUALS -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white font-weight-bold">
+                    📚 Resource Library
+                </div>
+
+                <div class="card-body text-center">
+                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                    <p class="text-muted">Upload manuals and resources.</p>
+
+                    <a href="{{ url_for('upload_manual') }}"
+                       class="btn btn-danger">
+                        Upload Manual
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOGS -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm border-dark">
+                <div class="card-header bg-dark text-white font-weight-bold">
+                    📜 Global Audit Logs
+                </div>
+
+                <div class="card-body">
+                    <p class="text-muted">
+                        Monitor all system activities.
+                    </p>
+
+                    <a href="{{ url_for('main.view_logs') }}"
+                       class="btn btn-dark btn-block">
+                        View Logs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ADMIN TABLE (FIXED - ONLY ONE CLEAN VERSION) -->
+    <div class="card mt-4 shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                👥 Registered Parish Admins
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            {% if admins and admins|length > 0 %}
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Branch</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for admin in admins or [] %}
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td><strong>{{ admin.username }}</strong></td>
+
+                            <td>
+                                {% if admin.role == 'superadmin' %}
+                                    <span class="badge badge-danger">Super Admin</span>
+                                {% else %}
+                                    <span class="badge badge-primary">Parish Admin</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ admin.branch.name if admin.branch else 'No Branch' }}
+                            </td>
+
+                            <td>
+                                {{ admin.branch.location if admin.branch else '—' }}
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-warning">
+                No registered admins found.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="signup-container">
+
+    <h2>Parish Admin Sign Up ⛪</h2>
+
+    <form method="POST">
+
+        <!-- USERNAME -->
+        <div class="form-group">
+            <label>Username</label>
+
+            <input type="text"
+                   name="username"
+                   class="form-control"
+                   required>
+        </div>
+
+        <!-- PARISH -->
+        <div class="form-group">
+            <label>Parish Name</label>
+
+            <input type="text"
+                   name="branch_name"
+                   class="form-control"
+                   placeholder="Enter Parish Name"
+                   required>
+        </div>
+
+        <!-- LOCATION -->
+        <div class="form-group">
+            <label>Location</label>
+
+            <input type="text"
+                   name="location"
+                   class="form-control"
+                   placeholder="Enter Parish Location"
+                   required>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+            <label>Password</label>
+
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   required>
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary btn-block">
+
+            Create Account
+
+        </button>
+
+    </form>
+
+    <p class="mt-3">
+        Already have an account?
+
+        <a href="{{ url_for('main.login') }}">
+            Login here
+        </a>
+    </p>
+
+</div>
+
+{% endblock %}

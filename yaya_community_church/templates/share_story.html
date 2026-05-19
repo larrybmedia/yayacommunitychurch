@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Share Your Testimony</h3>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="form-group mb-3">
+                    <label>Your Name</label>
+                    <input type="text"
+                           name="name"
+                           class="form-control"
+                           placeholder="Enter your full name"
+                           required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Testimony Title</label>
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           placeholder="e.g. Divine Healing"
+                           required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Your Testimony</label>
+                    <textarea name="content"
+                              class="form-control"
+                              rows="6"
+                              placeholder="Share what God has done for you..."
+                              required></textarea>
+                </div>
+
+                <!-- Add this note before the button -->
+                <div class="alert alert-info py-2 mb-3" style="border-radius: 10px; border: none; background-color: #f0f7ff;">
+                    <small class="text-primary font-weight-bold">
+                        <i class="fas fa-info-circle mr-1"></i> 
+                        Note: To ensure a safe community, all testimonies are reviewed by our team before going live.
+                    </small>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary btn-lg w-100">
+                    Submit Testimony
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

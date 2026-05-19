@@ -1,0 +1,19 @@
+<form action="{{ url_for('main.add_branch') }}" method="POST">
+    <div class="form-group">
+        <label>Parish Name</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label>YouTube Embed URL</label>
+        <input type="url" name="youtube_link" class="form-control" placeholder="https://www.youtube.com/embed/..." required>
+        <small class="text-muted">Must be the <b>Embed</b> link from YouTube.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Calendar Updates</label>
+        <textarea name="calendar_updates" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Parish</button>
+</form>

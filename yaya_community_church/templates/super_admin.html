@@ -1,0 +1,30 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Branch Name</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for branch in branches %}
+        <tr>
+            <td>{{ branch.name }}</td>
+            <td>{{ branch.location }}</td>
+            <td>
+
+                <a href="{{ url_for('main.view_branch_detail', branch_id=branch.id) }}">{{ branch.name }}</a>
+                <a href="{{ url_for('main.view_branch_detail', branch_id=branch.id) }}" class="btn btn-sm btn-info">
+    View Details
+</a>
+
+                <!-- Edit Link -->
+                <a href="{{ url_for('main.edit_branch', id=branch.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                
+                <!-- Delete Link -->
+                <a href="{{ url_for('main.set_branch', id=branch.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

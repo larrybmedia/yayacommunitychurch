@@ -1,0 +1,111 @@
+.branch-selector {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.custom-select {
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    padding: 5px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.border-left-success {
+    border-left: 5px solid #28a745 !important;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: scale(1.02); /* Makes the card grow slightly when hovered */
+    cursor: pointer;
+}
+.border-left-success {
+    border-left: 5px solid #28a745 !important;
+}
+
+.footer { 
+        background: #fbfcfc; /* Solid dark blue for maximum visibility */
+        color: #ffffff !important; 
+        padding: 60px 0 30px 0; 
+        margin-top: auto; /* Pushes footer to bottom if page is short */
+        border-top: 4px solid var(--accent-gold); /* Adds a nice gold separation line */
+    }
+
+    .footer h5 {
+        color: var(--accent-gold); /* Makes the title pop */
+        letter-spacing: 1px;
+    }
+
+    .footer p {
+        color: rgba(255, 255, 255, 0.9); /* Bright white-ish text */
+    }
+
+    .footer .fab {
+        transition: transform 0.3s ease;
+    }
+
+    .footer .fab:hover {
+        color: var(--accent-gold) !important;
+        transform: translateY(-3px);
+    }
+
+    .footer-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+    }
+
+    .footer-link:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+    /* Smooth transition for all interactive elements */
+.btn, .card, .nav-link, .dropdown-item {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Make cards lift and glow on hover */
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    border-color: var(--primary-blue);
+}
+
+/* Make buttons grow slightly */
+.btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.active-link {
+    color: var(--primary-blue) !important;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+/* Announcement Styling */
+
+.announcement-card{
+    background:#f8f9fa;
+    border-radius:10px;
+    border-left:5px solid #dc3545;
+}
+
+.announcement-title{
+    color:white;
+    background:#dc3545;
+    padding:8px;
+    border-radius:5px;
+    font-weight:bold;
+}
+
+.announcement-content{
+    color:#2c3e50;
+    font-size:16px;
+    font-weight:500;
+    line-height:1.6;
+}

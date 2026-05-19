@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .contact-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        color: #333;
+        text-shadow: none; /* Removing the base page text shadow for the card */
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+    .btn-prayer {
+        background: linear-gradient(135deg, #004a99 0%, #002d5c 100%);
+        color: white;
+        border: none;
+        font-weight: bold;
+    }
+    .contact-info-icon {
+        width: 40px;
+        height: 40px;
+        background: #eef4fb;
+        color: #004a99;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Left Side: Contact & Prayer Form -->
+        <div class="col-lg-7 mb-4">
+            <div class="card contact-card p-4 p-md-5">
+                <h2 class="mb-2">Get in Touch</h2>
+                <p class="text-muted mb-4">How can we support you today? Send us a message or a prayer request.</p>
+                
+                <form action="{{ url_for('main.contact_submit') }}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select name="subject" class="form-control" id="subjectSelect">
+                            <option value="Inquiry">General Inquiry</option>
+                            <option value="Prayer Request" selected>🙏 Prayer Request</option>
+                            <option value="Testimony">Share a Testimony</option>
+                            <option value="Counseling">Request Counseling</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="messageLabel">Your Prayer Request / Message</label>
+                        <textarea name="message" rows="5" class="form-control" placeholder="Type here..." required></textarea>
+                    </div>
+
+                    <div class="custom-control custom-checkbox mb-4" id="confidentialDiv">
+                        <input type="checkbox" name="is_private" class="custom-control-input" id="privateCheck">
+                        <label class="custom-control-label" for="privateCheck">Keep this prayer request confidential (Pastors only)</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-prayer btn-lg btn-block shadow">Send to RCCG YAYA</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Side: Contact Details -->
+        <div class="col-lg-5">
+            <div class="card contact-card p-4">
+                <h4 class="mb-4">Contact Information</h4>
+                
+                <div class="d-flex align-items-center mb-4">
+                    <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div>
+                        <h6 class="mb-0">The Youth's Place,</h6>
+                        <h7 class="mb-0">National Headquarters</h7>
+                        <p class="text-muted mb-0 small">Redemption Camp, km 46,</p>
+                        <p class="text-muted mb-0 small">Lagos-Ibadan ExpresswaY, Ogun State</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div>
+                        <h6 class="mb-0">Call Us</h6>
+                        <p class="text-muted mb-0 small">+234 (0) 911 1910 241</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <h6 class="mb-0">Email Support</h6>
+                        <p class="text-muted mb-0 small">info@rccgyaya.org</p>
+                    </div>
+                </div>
+
+                <hr>
+                
+                <h5 class="mt-4">Connect with us</h5>
+                <p class="small text-muted">Follow our social media handles for daily inspiration.</p>
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-primary btn-sm rounded-circle mr-2"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="btn btn-outline-info btn-sm rounded-circle mr-2"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="btn btn-outline-danger btn-sm rounded-circle mr-2"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="btn btn-outline-danger btn-sm rounded-circle"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dynamic text change based on selection
+    document.getElementById('subjectSelect').addEventListener('change', function() {
+        const label = document.getElementById('messageLabel');
+        const confidential = document.getElementById('confidentialDiv');
+        
+        if (this.value === 'Prayer Request') {
+            label.innerText = 'Your Prayer Request';
+            confidential.style.display = 'block';
+        } else {
+            label.innerText = 'Your Message';
+            confidential.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

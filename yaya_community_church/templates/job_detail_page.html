@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.jobs') }}">Back to Jobs</a></li>
+                    <li class="breadcrumb-item active">{{ job.title }}</li>
+                </ol>
+            </nav>
+            
+            <div class="card shadow-sm border-0 p-4">
+                <h1 class="text-primary">{{ job.title }}</h1>
+                <h5 class="text-muted mb-4">{{ job.company }} | {{ job.location }}</h5>
+                
+                <hr>
+                
+                <div class="job-description py-3">
+                    <h5>Job Description</h5>
+                    <p style="white-space: pre-wrap;">{{ job.description }}</p>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ url_for('main.jobs') }}" class="btn btn-outline-secondary">Go Back</a>
+                    <button class="btn btn-success px-5">Apply for this Position</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

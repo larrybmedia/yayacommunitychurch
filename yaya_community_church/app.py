@@ -23,7 +23,7 @@ from flask_login import (
 
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # =========================================================
 # CORE APPLICATION DEPENDENCIES & EXTENSIONS
@@ -54,7 +54,6 @@ app = Flask(__name__)
 # SECURITY CONFIGURATION
 # =========================================================
 SERVER_KEY = os.getenv("SERVER_VERIFICATION_KEY")
-SERVER_VERIFICATION_KEY = os.getenv("SERVER_VERIFICATION_KEY")
 SUPER_ADMIN_USERNAME = os.getenv("SUPER_ADMIN_USERNAME")
 SUPER_ADMIN_PASSWORD = os.getenv("SUPER_ADMIN_PASSWORD")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
@@ -75,7 +74,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'yaya_platform_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-app.config["SERVER_VERIFICATION_KEY"] = os.getenv("SERVER_VERIFICATION_KEY")
+app.config["SERVER_VERIFICATION_KEY"] = SERVER_KEY
 
 # Mail Configurations
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -91,16 +90,51 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'resumes'), exist_ok=True)
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'manuals'), exist_ok=True)
 
 # =========================================================
+# HELPER ACTIONS & SYSTEM FUNCTIONS
+# =========================================================
+def create_superadmin():
+    username = SUPER_ADMIN_USERNAME or "superadmin"
+    password = SUPER_ADMIN_PASSWORD or "SuperAdmin@2026"
+    
+    admin = Admin.query.filter_by(username=username).first()
+    if not admin:
+        admin = Admin(
+            username=username,
+            password_hash=generate_password_hash(password),
+            role="superadmin"
+        )
+        db.session.add(admin)
+        db.session.commit()
+        print(f"Superadmin '{username}' initialized successfully.")
+
+def reset_superadmin():
+    username = SUPER_ADMIN_USERNAME or "superadmin"
+    password = SUPER_ADMIN_PASSWORD or "SuperAdmin@2026"
+
+    admin = Admin.query.filter_by(username=username).first()
+    if admin:
+        db.session.delete(admin)
+        db.session.commit()
+    
+    new_admin = Admin(
+        username=username,
+        password_hash=generate_password_hash(password),
+        role="superadmin"
+    )
+    db.session.add(new_admin)
+    db.session.commit()
+    print("Superadmin reset successful")
+
+# =========================================================
 # SYSTEM SERVICE BINDINGS & LIFECYCLE FORCING
 # =========================================================
 db.init_app(app)
 mail.init_app(app)
 
-# THIS RUNS EVERY TIME GUNICORN OR PYTHON ENGINE STARTS THE SERVICE
+# Executed immediately on engine compilation for container workers
 with app.app_context():
     db.create_all()
-    # If you want to automatically generate seed data on deploy, uncomment line below:
-    # create_superadmin() 
+    create_superadmin()  # Automatically seeds your default user account into production/local db
 
 # =========================================================
 # LOGIN MANAGER
@@ -134,39 +168,14 @@ def verify_admin():
         return jsonify({"status": "success"})
     return jsonify({"status": "error"}), 401
 
-def create_superadmin():
-    admin = Admin.query.filter_by(username="superadmin").first()
-    if not admin:
-        admin = Admin(
-            username="superadmin",
-            password_hash=generate_password_hash("SuperAdmin@2026"),
-            role="superadmin"
-        )
-        db.session.add(admin)
-        db.session.commit()
-
-def reset_superadmin():
-    admin = Admin.query.filter_by(username="superadmin").first()
-    if admin:
-        db.session.delete(admin)
-        db.session.commit()
-    
-    new_admin = Admin(
-        username="superadmin",
-        password_hash=generate_password_hash("SuperAdmin@2026"),
-        role="superadmin"
-    )
-    db.session.add(new_admin)
-    db.session.commit()
-    print("Superadmin reset successful")
-
 @app.route('/auth_login', methods=['POST'])
 def auth_login():
     username = request.form.get('username')
     password = request.form.get('password')
+    
     user = Admin.query.filter_by(username=username).first()
 
-    if user and user.check_password(password):
+    if user and check_password_hash(user.password_hash, password):
         login_user(user)
         if user.role == 'superadmin':
             return redirect(url_for('main.super_admin_dashboard'))
@@ -214,7 +223,7 @@ def post_local_job():
 @app.route('/jobs')
 def jobs():
     global_jobs = Job.query.filter_by(is_global=True).all()
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and hasattr(current_user, 'branch_id'):
         local_jobs = Job.query.filter_by(is_global=False, branch_id=current_user.branch_id).all()
     else:
         local_jobs = []
@@ -324,7 +333,7 @@ def upload_stream():
     return render_template("admin/upload_stream.html")
 
 # =========================================================
-# LOCAL TERMINAL EXECUTION ENGINE
+# RUN APP
 # =========================================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
