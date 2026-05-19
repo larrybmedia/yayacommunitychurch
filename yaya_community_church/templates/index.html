@@ -2,10 +2,17 @@
 
 {% block content %}
 
+<style>
+.announcements-title {
+    color: #2563EB;
+    font-weight: 700;
+}
+</style>
+
 <div class="container mt-4">
 
     <!-- =========================
-         LIVE STREAM SECTION (GLOBAL + BRANCH)
+    LIVE STREAM SECTION (GLOBAL + BRANCH)
     ========================== -->
 
     {% if main_stream and main_stream.url or (branch_stream and branch_stream.youtube_link) %}
@@ -91,7 +98,7 @@
 
 
     <!-- =========================
-         POSTS SECTION
+    POSTS SECTION
     ========================== -->
     <div class="row mt-4">
 
@@ -108,7 +115,7 @@
         {% endfor %}
 
         <!-- =========================
-             ANNOUNCEMENTS
+        ANNOUNCEMENTS
         ========================== -->
         <div class="col-12">
             <div class="card mb-4 shadow-sm">
