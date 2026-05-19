@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "yaya-app",
-    "slug": "yaya-app",
+    "name": "Yaya Community Church",
+    "slug": "rccgyaya-community-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
