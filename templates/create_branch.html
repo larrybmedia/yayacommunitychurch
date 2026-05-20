@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">Add New Branch</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label>Branch Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="e.g. Lagos Island Parish" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>State/Location</label>
+                                <input type="text" name="location" class="form-control" placeholder="e.g. Lagos" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Stream URL (Optional)</label>
+                                <input type="url" name="stream_url" class="form-control" placeholder="YouTube/FB link">
+                            </div>
+                        </div>
+                        <hr>
+                        <button type="submit" class="btn btn-primary btn-block">Register Branch</button>
+                        <a href="{{ url_for('main.admin') }}" class="btn btn-link btn-block text-muted">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,447 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Dashboard Theme */
+    .admin-header {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #004a99 0%, #002d5c 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 25px;
+        border: none;
+    }
+    .admin-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .nav-tabs .nav-link {
+        border: none;
+        color: #6c757d;
+        font-weight: 600;
+        padding: 12px 25px;
+    }
+    .nav-tabs .nav-link.active {
+        color: #004a99;
+        border-bottom: 3px solid #004a99;
+        background: transparent;
+    }
+    .super-admin-indicator {
+        border: 2px dashed #dc3545;
+        border-radius: 15px;
+        position: relative;
+    }
+    .super-admin-label {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: #dc3545;
+        color: white;
+        padding: 2px 10px;
+        font-size: 0.7rem;
+        border-radius: 10px;
+        z-index: 10;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- 1. Header Section -->
+    <div class="admin-header d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h1 class="display-6 font-weight-bold text-dark mb-1">Admin Control Center</h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-user-shield mr-2"></i>Logged in as: <strong>{{ current_user.username }}</strong>
+                <span class="badge {% if current_user.role == 'superadmin' %}badge-danger{% else %}badge-primary{% endif %} ml-2">
+                    {{ current_user.role|upper }}
+                </span>
+            </p>
+        </div>
+
+        <!-- GLOBAL CONTENT SECTION (Only for Superadmin) -->
+        {% if current_user.role == 'superadmin' %}
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-globe mr-2"></i>Post Global Announcement</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('main.post_job') }}" method="POST">
+                            <input type="hidden" name="is_global" value="true">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" name="title" class="form-control" placeholder="Front Page Headline" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Content</label>
+                                <textarea name="description" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-block">Post to Front Page</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="fas fa-broadcast-tower mr-2"></i>Main Front Page Stream</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('main.upload_stream') }}" method="POST">
+                            <!-- No parish_id means it's Global -->
+                            <div class="form-group">
+                                <label>Live URL (YouTube)</label>
+                                <input type="text" name="stream_url" class="form-control" placeholder="https://..." required>
+                            </div>
+                            <button type="submit" class="btn btn-dark btn-block">Update Main Stream</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="mt-3 mt-md-0">
+            <a href="{{ url_for('main.post_job') }}" class="btn btn-outline-primary px-4 mr-2">
+                <i class="fas fa-briefcase mr-2"></i>Post Job
+            </a>
+
+            {% if current_user.role == 'superadmin' %}
+                <a href="{{ url_for('main.upload_manual') }}" class="btn btn-outline-danger px-4 mr-2">
+                    <i class="fas fa-upload mr-2"></i>Upload Manual
+                </a>
+                <a href="{{ url_for('main.create_branch') }}" class="btn btn-danger px-4">
+                    <i class="fas fa-plus-circle mr-2"></i>Add Branch
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- NEW SECTION: Live Stream Management (Multi-Parish) -->
+    <div class="col-md-12 mb-5">
+        <div class="card shadow admin-card">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0"><i class="fas fa-broadcast-tower mr-2"></i> Parish Stream Management</h5>
+            </div>
+            <div class="card-body p-4">
+                {% for parish in branches %}
+                    <div class="mb-4 p-3 border rounded">
+                        <h5 class="text-primary">Update Stream for <strong>{{ parish.name }}</strong></h5>
+                        <form action="{{ url_for('main.upload_stream') }}" method="POST" class="row g-3">
+                            <!-- Hidden ID to identify which parish to update -->
+                            <input type="hidden" name="parish_id" value="{{ parish.id }}">
+                            
+                            <div class="col-md-9">
+                                <label class="form-label font-weight-bold">Stream URL (YouTube Link)</label>
+                                <input type="text" name="stream_url" class="form-control" 
+                                       value="{{ parish.youtube_link }}" placeholder="https://youtube.com/live/...">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-success w-100">Save Update</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Quick Action Forms -->
+    <div class="row mb-5">
+        <div class="col-xl-5 col-lg-6 mb-4">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-video mr-2"></i>Quick Stream Upload</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('main.upload_stream') }}" method="POST">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Stream Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Morning Glow" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Stream URL</label>
+                            <input type="text" name="url" class="form-control" placeholder="YouTube URL" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Update Stream</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-7 col-lg-6 mb-4">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-calendar-plus mr-2"></i>Schedule New Event</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('main.post_event') }}" method="POST">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Event Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Sunday Service" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Date & Time</label>
+                                    <input type="datetime-local" name="event_date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Location</label>
+                                    <input type="text" name="location" class="form-control" placeholder="Main Hall">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" name="is_global" class="custom-control-input" id="globalCheck">
+                            <label class="custom-control-label" for="globalCheck">Make Global (Visible to all branches)</label>
+                        </div>
+                        <button type="submit" class="btn btn-dark btn-lg btn-block shadow-sm">Post Event</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Main Tabs System -->
+    <div class="card admin-card shadow-lg {% if current_user.role == 'superadmin' %}super-admin-indicator{% endif %} mb-5">
+        {% if current_user.role == 'superadmin' %}
+            <div class="super-admin-label">SUPER ADMIN MANAGEMENT</div>
+        {% endif %}
+
+        <div class="card-header bg-white pt-4 px-4 border-0">
+            <ul class="nav nav-tabs" id="adminTab" role="tablist">
+                {% if current_user.role == 'superadmin' %}
+                <li class="nav-item">
+                    <a class="nav-link active" id="branches-tab" data-toggle="tab" href="#branches" role="tab">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Branches
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="manuals-tab" data-toggle="tab" href="#manuals" role="tab">
+                        <i class="fas fa-file-pdf mr-2"></i>Manuals
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link {% if current_user.role != 'superadmin' %}active{% endif %}" id="posts-tab" data-toggle="tab" href="#posts" role="tab">
+                        <i class="fas fa-bullhorn mr-2"></i>News
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="testimonies-tab" data-toggle="tab" href="#testimonies" role="tab">
+                        <i class="fas fa-quote-left mr-2"></i>Testimonies
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="apps-tab" data-toggle="tab" href="#apps" role="tab">
+                        <i class="fas fa-users mr-2"></i>Applications
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body p-0">
+            <div class="tab-content" id="adminTabContent">
+                {% if current_user.role == 'superadmin' %}
+                <div class="tab-pane fade show active" id="branches" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Branch Name</th>
+                                    <th>Location</th>
+                                    <th class="text-right px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for b in branches %}
+                                <tr>
+                                    <td class="px-4 font-weight-bold">{{ b.name }}</td>
+                                    <td>{{ b.location }}</td>
+                                    <td class="text-right px-4">
+                                        <a href="{{ url_for('main.delete_branch', id=b.id) }}" class="text-danger" onclick="return confirm('Delete branch?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="manuals" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Manual Title</th>
+                                    <th>Category</th>
+                                    <th>File Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for m in manuals %}
+                                <tr>
+                                    <td class="px-4 font-weight-bold">{{ m.title }}</td>
+                                    <td><span class="badge badge-info">{{ m.category }}</span></td>
+                                    <td class="text-muted small">{{ m.filename }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="tab-pane fade {% if current_user.role != 'superadmin' %}show active{% endif %}" id="posts" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Announcement</th>
+                                    <th>Scope</th>
+                                    <th>Summary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in posts %}
+                                <tr>
+                                    <td class="px-4 font-weight-bold">{{ post.title }}</td>
+                                    <td>
+                                        {% if post.is_global %}
+                                        <span class="badge badge-warning">NATIONAL</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">LOCAL</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">{{ post.content[:60] }}...</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="testimonies" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Testimony Title</th>
+                                    <th>Shared By</th>
+                                    <th>Preview</th>
+                                    <th class="text-right px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in testimonies %}
+                                <tr>
+                                    <td class="px-4 font-weight-bold">{{ t.title }}</td>
+                                    <td>{{ t.name }}</td>
+                                    <td class="text-muted small">{{ t.content[:50] }}...</td>
+                                    <td class="text-right px-4">
+                                        {% if not t.is_approved %}
+                                            <a href="{{ url_for('main.approve_testimony', id=t.id) }}" class="btn btn-sm btn-success mr-2">
+                                                <i class="fas fa-check"></i> Approve
+                                            </a>
+                                        {% else %}
+                                            <span class="badge badge-success px-3 py-2 mr-2">Live</span>
+                                        {% endif %}
+                                        <a href="{{ url_for('main.delete_testimony', id=t.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete testimony?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="apps" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Applicant</th>
+                                    <th>Job Ref</th>
+                                    <th>Email</th>
+                                    <th class="text-right px-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr>
+                                    <td class="px-4 font-weight-bold">{{ app.user_name }}</td>
+                                    <td>#{{ app.job_id }}</td>
+                                    <td>{{ app.user_email }}</td>
+                                    <td class="text-right px-4">
+                                        <a href="{{ url_for('static', filename='uploads/resumes/' + app.resume_filename) }}" class="btn btn-sm btn-primary" target="_blank">View PDF</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Footer Section -->
+    <div class="card shadow-sm border-0 mt-5">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="fas fa-briefcase mr-2"></i> Recent Job Postings</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Date Posted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_jobs %}
+                            {% for job in recent_jobs %}
+                            <tr>
+                                <td><strong>{{ job.title }}</strong></td>
+                                <td>{{ job.company }}</td>
+                                <td>{{ job.created_at.strftime('%Y-%m-%d') if job.created_at }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No jobs posted yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Essential Scripts for Tabs to function -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

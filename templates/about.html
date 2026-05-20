@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #004a99 0%, #002d5c 100%);
+        color: white;
+        padding: 60px 0;
+        border-radius: 15px;
+        margin-bottom: 40px;
+    }
+    .vision-card {
+        border-left: 5px solid #ffc107;
+        transition: transform 0.3s;
+    }
+    .mission-card {
+        border-left: 5px solid #28a745;
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .value-icon {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        background: #f8f9fa;
+        border-radius: 50%;
+        display: inline-block;
+        margin-bottom: 15px;
+        color: #004a99;
+    }
+
+    /* LEADERS SECTION */
+    .leader-card img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin: auto;
+    }
+
+    .leader-card {
+        transition: 0.3s;
+    }
+
+    .leader-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+
+<div class="container">
+
+    <!-- HERO SECTION -->
+    <div class="hero-section text-center shadow">
+        <div class="px-4">
+            <h1 class="display-4 font-weight-bold mb-3">Our Fellowship</h1>
+            <p class="lead mx-auto" style="max-width: 800px;">
+                At RCCG YAYA, we are dedicated to nurturing the spiritual growth and development of the youth within the Redeemed Christian Church of God. We understand that young people are the future of our church and society — and we're committed to equipping them with the faith, knowledge, and values to excel in every aspect of life.
+            </p>
+            <p class="lead mx-auto" style="max-width: 800px;">
+                The RCCG Youth and Young Adults (YAYA) Fellowship aims to empower and equip young people for effective ministry, leadership, and spiritual growth, fostering a generation rooted in God's word and prayer.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- VISION -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm vision-card border-0">
+                <div class="card-body">
+                    <h3 class="font-weight-bold text-dark mb-4">
+                        <i class="fas fa-eye text-warning mr-2"></i>Vision Statement
+                    </h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Raise a Burning Generation:</strong> Vibrant, spirit-filled, and purpose-driven youth grounded in the Word of God and prayer.
+                        </li>
+                        <li class="mb-3">
+                            <strong>Provide a Platform:</strong> Creating a space where young people encounter Jesus and prepare to propagate the Gospel.
+                        </li>
+                        <li>
+                            <strong>Establishment:</strong> Walking in the fullness of God and impacting the world for Christ.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- MISSION -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm mission-card border-0">
+                <div class="card-body">
+                    <h3 class="font-weight-bold text-dark mb-4">
+                        <i class="fas fa-rocket text-success mr-2"></i>Mission Statement
+                    </h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-check-circle text-success mr-2"></i><strong>Evangelism:</strong> Winning the youth for the Kingdom.</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success mr-2"></i><strong>Leadership:</strong> Building Christian leaders for every sector.</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success mr-2"></i><strong>Empowerment:</strong> Nurturing spiritual growth and social responsibility.</li>
+                        <li><i class="fas fa-check-circle text-success mr-2"></i><strong>Community:</strong> Building capacity for impactful change.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CORE VALUES -->
+    <div class="my-5 text-center">
+        <h2 class="font-weight-bold mb-4">Core Values</h2>
+
+        <div class="row">
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="value-icon shadow-sm"><i class="fas fa-fire fa-lg"></i></div>
+                <h5 class="font-weight-bold">Passion for God</h5>
+            </div>
+
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="value-icon shadow-sm"><i class="fas fa-heart fa-lg"></i></div>
+                <h5 class="font-weight-bold">Love for People</h5>
+            </div>
+
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="value-icon shadow-sm"><i class="fas fa-star fa-lg"></i></div>
+                <h5 class="font-weight-bold">Excellence</h5>
+            </div>
+
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="value-icon shadow-sm"><i class="fas fa-shield-alt fa-lg"></i></div>
+                <h5 class="font-weight-bold">Integrity</h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL FOOTPRINT -->
+    <div class="card border-0 bg-light shadow-sm mb-5">
+        <div class="card-body text-center p-5">
+            <h4 class="font-weight-bold text-primary mb-3">Part of RCCG Worldwide</h4>
+            <p class="font-italic mb-0" style="font-size: 1.1rem;">
+                "To make heaven, to take as many people with us, and to have a member of the church in every family of all nations."
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- LEADERS SECTION ADDED -->
+    <!-- ========================= -->
+
+    <div class="text-center mb-4">
+        <h2 class="font-weight-bold">Our Leaders</h2>
+        <p class="text-muted">Meet our continental and regional leaders</p>
+    </div>
+
+    <!-- TOP 3 LEADERS -->
+    <div class="row mb-5">
+
+        <div class="col-md-4 text-center mb-4">
+            <div class="card p-3 shadow-sm leader-card">
+                <img src="{{ url_for('static', filename='sola.jpg') }}">
+                <h5 class="mt-3">Pst Babasola Olukoya</h5>
+                <p class="text-muted">Special Assistant to the General Overseer (Enoch Adeboye), Young Adults and Youth Affairs</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center mb-4">
+            <div class="card p-3 shadow-sm leader-card">
+                <img src="{{ url_for('static', filename='jacob.jpg') }}">
+                <h5 class="mt-3">Pst Jacob Obaro</h5>
+                <p class="text-muted">National Youth Pastor, RCCG — overseeing youths in Nigeria. Assistant PIC Region 35 and PIC Youth Province 7.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center mb-4">
+            <div class="card p-3 shadow-sm leader-card">
+                <img src="{{ url_for('static', filename='pfo.jpg') }}">
+                <h5 class="mt-3">Pst Femi Oyetunde</h5>
+                <p class="text-muted">Assistant National Youth Pastor of the Redeemed Christian Church of God.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3 COLUMNS × 4 ROWS GRID -->
+    <div class="row">
+
+        <!-- ROW 1 -->
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 1<br><strong>Pastor Kalu Ndukwe</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 2<br><strong>Pastor E.A. Odeyemi</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 3<br><strong>Pastor J.F. Odesola</strong><br>Continental Overseer</div></div>
+
+        <!-- ROW 2 -->
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 4<br><strong>Pastor Ayo Adeloye</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 5<br><strong>Pastor Peter Amenkhienan</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 6<br><strong>Pastor James Fadel</strong><br>Continental Overseer</div></div>
+
+        <!-- ROW 3 -->
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 7<br><strong>Pastor Remi Akintunde</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 8<br><strong>Pastor Ibukun Williams</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 9<br><strong>Pastor Leke Sanusi</strong><br>Continental Overseer</div></div>
+
+        <!-- ROW 4 -->
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 10<br><strong>Pastor .......</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 11<br><strong>Pastor Belemina Obunge</strong><br>Continental Overseer</div></div>
+        <div class="col-md-4 mb-4"><div class="card p-3 text-center shadow-sm">Continent 12<br><strong>Pastor (Mrs) Adeola Mensah</strong><br>Continental Overseer</div></div>
+
+    </div>
+
+</div>
+
+{% endblock %}

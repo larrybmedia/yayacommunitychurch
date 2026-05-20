@@ -1,0 +1,37 @@
+<form method="POST">
+    <!-- Title Input -->
+    <label for="title">Post Title:</label><br>
+    <input type="text" name="title" id="title" value="{{ post.title }}" required>
+    
+    <br><br>
+
+    <!-- Category Dropdown -->
+    <label for="category">Category:</label><br>
+    <select name="category" id="category">
+        <option value="Announcement" {% if post.category == 'Announcement' %}selected{% endif %}>Announcement</option>
+        <option value="Event" {% if post.category == 'Event' %}selected{% endif %}>Event</option>
+        <option value="Testimony" {% if post.category == 'Testimony' %}selected{% endif %}>Testimony</option>
+    </select>
+
+    <br><br>
+
+    <!-- Content Area -->
+    <label for="content">Content:</label><br>
+    <textarea name="content" id="content" rows="10" cols="50">{{ post.content }}</textarea>
+
+    <textarea name="content" id="content" rows="10" cols="50">{{ post.content }}</textarea>
+
+    <br><br>
+
+    <!-- Status Toggle (Everything) -->
+    <label>
+    <input type="checkbox" name="is_published" {% if post.is_published %}checked{% endif %}>
+    Published (Check to make this post visible to everyone)
+{% if not post.is_published %}<span style="color: red;">[Currently Draft]</span>{% endif %}
+</label>
+
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+    <a href="{{ url_for('main.view_branch_detail', branch_id=post.branch_id) }}">Cancel</a>
+</form>

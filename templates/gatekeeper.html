@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Verification</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .verification-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+        .security-icon {
+            font-size: 2.5rem;
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="verification-container">
+    <div class="card p-4">
+        <div class="card-body text-center">
+            
+            <!-- Security Header Icon -->
+            <div class="security-icon">
+                <i class="fas fa-server"></i>
+            </div>
+            
+            <h3 class="fw-bold text-dark mb-1">Server Verification</h3>
+            <p class="text-muted small mb-4">Provide your master key to access the command center.</p>
+
+            <!-- Flask Flash Messages Section -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for category, message in messages %}
+                            <div class="alert alert-danger py-2 px-3 small border-0 text-start" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Form Processing -->
+            <form method="POST">
+                <div class="mb-3 text-start">
+                    <label for="server_key" class="form-label small fw-bold text-secondary">Secret Passkey</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted">
+                            <i class="fas fa-key"></i>
+                        </span>
+                        <input type="password"
+                               id="server_key"
+                               name="server_key"
+                               class="form-control border-start-0 ps-0"
+                               placeholder="Enter Server Key"
+                               required
+                               style="box-shadow: none;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100 py-2 mt-2 fw-bold shadow-sm">
+                    <i class="fas fa-shield-alt me-2"></i>Verify Gateway
+                </button>
+            </form>
+            
+        </div>
+    </div>
+    
+    <div class="text-center mt-3">
+        <small class="text-muted">&copy; 2026 Platform Security Architecture</small>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

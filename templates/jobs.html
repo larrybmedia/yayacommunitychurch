@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .jobs-hero {
+        background: linear-gradient(rgba(0, 74, 153, 0.8), rgba(0, 74, 153, 0.8)),
+                    url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+
+    .job-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        background: white;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .job-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .section-title {
+        border-left: 5px solid #ffc107; /* RCCG Gold */
+        padding-left: 12px;
+        margin-bottom: 25px;
+        font-weight: 700;
+        color: #004a99;
+    }
+
+    .apply-box {
+        background: #fdfdfd;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px dashed #004a99;
+        margin-top: 15px;
+    }
+
+    .badge-national {
+        background: #6f42c1;
+        color: white;
+    }
+
+    .text-primary-dark { color: #004a99; }
+</style>
+
+<div class="container py-4">
+
+    <!-- HERO SECTION -->
+    <div class="jobs-hero text-center shadow">
+        <h1 class="display-4 font-weight-bold">Career Opportunities</h1>
+        <p class="lead">Empowering the youth with professional growth nationwide</p>
+    </div>
+
+    <div class="row">
+
+        <!-- ================= LOCAL JOBS SECTION ================= -->
+        <div class="col-lg-7">
+            <h4 class="section-title">
+                Local Jobs 📍
+                <small class="text-muted" style="font-size: 0.6em;">
+                    ({{ session.get('branch_name', 'Your Local Branch') }})
+                </small>
+            </h4>
+
+            {% if local_jobs or jobs %}
+                {# Fixed duplication here by appending the unique filter #}
+                {% set combined_local = (local_jobs + jobs) | unique %}
+                {% for job in combined_local %}
+                <div class="card job-card mb-4 p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="text-primary-dark font-weight-bold mb-1">{{ job.title }}</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="fas fa-building mr-1"></i> {{ job.company if job.company else job.branch.name }}
+                                {% if job.location %} | <i class="fas fa-map-marker-alt"></i> {{ job.location }}{% endif %}
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <span class="badge badge-light border text-muted mb-2">
+                                {{ job.created_at.strftime('%d %b %Y') if job.created_at else 'Recently' }}
+                            </span>
+                            
+                            <!-- SUPERADMIN DELETE FOR LOCAL -->
+                            {% if current_user.is_authenticated and current_user.role == 'superadmin' %}
+                            <form action="{{ url_for('main.delete_job', id=job.id) }}" method="POST" onsubmit="return confirm('Delete this listing?');">
+                                <button type="submit" class="btn btn-link text-danger p-0 small">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-2">
+                    <p class="text-secondary">{{ job.description[:200] }}...</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-primary btn-sm px-4" 
+                                type="button" 
+                                data-toggle="collapse" 
+                                data-target="#apply-local-{{ job.id }}">
+                            Apply Now
+                        </button>
+                        <a href="{{ url_for('main.job_details', id=job.id) }}" class="btn btn-sm btn-link">View Full Details</a>
+                    </div>
+
+                    <!-- COLLAPSIBLE APPLY FORM -->
+                    <div class="collapse" id="apply-local-{{ job.id }}">
+                        <div class="apply-box shadow-sm">
+                            <h6 class="font-weight-bold mb-3">Submit Application</h6>
+                           <form method="POST" action="{{ url_for('main.apply_job', job_id=job.id) }}" enctype="multipart/form-data">
+                                <div class="form-group mb-2">
+                                    <input type="text" name="full_name" class="form-control" placeholder="Your Full Name" required>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="small text-muted mb-1">Upload CV/Resume (PDF preferred)</label>
+                                    <input type="file" name="resume" class="form-control-file border p-1 rounded w-100" required>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block font-weight-bold">
+                                    Send Application <i class="fas fa-paper-plane ml-1"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 bg-white rounded shadow-sm border">
+                    <i class="fas fa-search mb-3 text-muted fa-2x"></i>
+                    <p class="text-muted">No specific local jobs listed for this branch yet.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- ================= NATIONAL/GLOBAL JOBS SECTION ================= -->
+        <div class="col-lg-5">
+            <h4 class="section-title">National Jobs 🌍</h4>
+
+            {% if global_jobs %}
+                {% for job in global_jobs %}
+                <div class="card job-card mb-3 p-3 border-left border-primary">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="font-weight-bold text-primary-dark mb-0">{{ job.title }}</h6>
+                        <span class="badge badge-national p-1 px-2 small">National</span>
+                    </div>
+
+                    <p class="text-muted small mb-2 font-italic">{{ job.company }}</p>
+                    <p class="text-secondary small">{{ job.description[:120] }}...</p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button class="btn btn-outline-primary btn-sm flex-grow-1 mr-2" 
+                                type="button" 
+                                data-toggle="collapse" 
+                                data-target="#apply-global-{{ job.id }}">
+                            View & Apply
+                        </button>
+                        
+                        <!-- SUPERADMIN DELETE FOR GLOBAL -->
+                        {% if current_user.is_authenticated and current_user.role == 'superadmin' %}
+                        <form action="{{ url_for('main.delete_job', id=job.id) }}" method="POST" onsubmit="return confirm('Delete this national listing?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+
+                    <!-- COLLAPSIBLE APPLY FORM -->
+                    <div class="collapse mt-3" id="apply-global-{{ job.id }}">
+                        <div class="apply-box">
+                            <form method="POST" action="{{ url_for('main.apply_job', job_id=job.id) }}" enctype="multipart/form-data">
+                                <input type="text" name="full_name" class="form-control mb-2" placeholder="Full Name" required>
+                                <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
+                                <input type="file" name="resume" class="form-control-file mb-3 border rounded p-1" required>
+                                <button type="submit" class="btn btn-success btn-block btn-sm">Submit Application</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 text-right border-top pt-2">
+                        <small class="text-muted" style="font-size: 0.75rem;">
+                            Posted: {{ job.created_at.strftime('%d %b %Y') if job.created_at else 'Recently' }}
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4 bg-light rounded">
+                    <p class="text-muted mb-0">No national listings at this time.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
