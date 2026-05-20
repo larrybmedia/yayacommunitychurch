@@ -17,88 +17,83 @@
     border-left: 5px solid #28a745 !important;
 }
 
-.card {
-    transition: transform 0.2s;
-}
-.card:hover {
-    transform: scale(1.02); /* Makes the card grow slightly when hovered */
-    cursor: pointer;
-}
-.border-left-success {
-    border-left: 5px solid #28a745 !important;
+/* General cards */
+.card{
+    background:#ffffff;
+    transition:all .3s ease;
 }
 
-.footer {
-        background: #fbfcfc; /* Solid dark blue for maximum visibility */
-        color: #ffffff !important;
-        padding: 60px 0 30px 0;
-        margin-top: auto; /* Pushes footer to bottom if page is short */
-        border-top: 4px solid var(--accent-gold); /* Adds a nice gold separation line */
-    }
-
-    .footer h5 {
-        color: var(--accent-gold); /* Makes the title pop */
-        letter-spacing: 1px;
-    }
-
-    .footer p {
-        color: rgba(255, 255, 255, 0.9); /* Bright white-ish text */
-    }
-
-    .footer .fab {
-        transition: transform 0.3s ease;
-    }
-
-    .footer .fab:hover {
-        color: var(--accent-gold) !important;
-        transform: translateY(-3px);
-    }
-
-    .footer-link {
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-    }
-
-    .footer-link:hover {
-        color: #ffffff;
-        text-decoration: underline;
-    }
-
-    /* Smooth transition for all interactive elements */
-.btn, .card, .nav-link, .dropdown-item {
-    transition: all 0.3s ease-in-out;
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,.15);
+    cursor:pointer;
 }
 
-/* Make cards lift and glow on hover */
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    border-color: var(--primary-blue);
+/* Footer */
+.footer{
+    background:#1f2937;
+    color:#ffffff;
+    padding:60px 0 30px 0;
+    margin-top:auto;
+    border-top:4px solid var(--accent-gold);
 }
 
-/* Make buttons grow slightly */
-.btn:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
+.footer h5{
+    color:var(--accent-gold);
+    letter-spacing:1px;
 }
 
-.active-link {
-    color: var(--primary-blue) !important;
-    border-bottom: 2px solid var(--accent-gold);
+.footer p{
+    color:rgba(255,255,255,.9);
+}
+
+.footer-link{
+    color:rgba(255,255,255,.7);
+    text-decoration:none;
+}
+
+.footer-link:hover{
+    color:#ffffff;
+    text-decoration:underline;
+}
+
+.footer .fab{
+    transition:transform .3s ease;
+}
+
+.footer .fab:hover{
+    color:var(--accent-gold) !important;
+    transform:translateY(-3px);
+}
+
+/* Buttons */
+.btn:hover{
+    transform:scale(1.05);
+    filter:brightness(1.1);
+}
+
+/* Active nav link */
+.active-link{
+    color:var(--primary-blue) !important;
+    border-bottom:2px solid var(--accent-gold);
 }
 
 /* Announcement Styling */
-
-.announcements-title {
-    color: #2563EB;   /* blue */
-    font-weight: 700;
+.announcements-title{
+    color:#2563EB;
+    font-weight:700;
 }
 
-.announcement-title {
-    color: #DC2626;   /* red */
-    font-weight: bold;
+.announcement-title{
+    color:#DC2626;
+    font-weight:bold;
 }
 
-.announcement-content {
-    color: #2563EB;   /* blue */
+.announcement-content{
+    color:#2563EB;
+}
+
+.announcement-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
 }

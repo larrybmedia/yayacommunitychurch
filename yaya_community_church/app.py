@@ -95,7 +95,7 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'manuals'), exist_ok=True)
 def create_superadmin():
     username = SUPER_ADMIN_USERNAME or "superadmin"
     password = SUPER_ADMIN_PASSWORD or "SuperAdmin@2026"
-    
+
     admin = Admin.query.filter_by(username=username).first()
     if not admin:
         admin = Admin(
@@ -115,7 +115,7 @@ def reset_superadmin():
     if admin:
         db.session.delete(admin)
         db.session.commit()
-    
+
     new_admin = Admin(
         username=username,
         password_hash=generate_password_hash(password),
@@ -172,7 +172,7 @@ def verify_admin():
 def auth_login():
     username = request.form.get('username')
     password = request.form.get('password')
-    
+
     user = Admin.query.filter_by(username=username).first()
 
     if user and check_password_hash(user.password_hash, password):
@@ -337,4 +337,4 @@ def upload_stream():
 # =========================================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=10000, debug=True)
