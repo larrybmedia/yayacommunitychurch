@@ -28,10 +28,10 @@
     border-left: 5px solid #28a745 !important;
 }
 
-.footer { 
+.footer {
         background: #fbfcfc; /* Solid dark blue for maximum visibility */
-        color: #ffffff !important; 
-        padding: 60px 0 30px 0; 
+        color: #ffffff !important;
+        padding: 60px 0 30px 0;
         margin-top: auto; /* Pushes footer to bottom if page is short */
         border-top: 4px solid var(--accent-gold); /* Adds a nice gold separation line */
     }
@@ -89,23 +89,16 @@
 
 /* Announcement Styling */
 
-.announcement-card{
-    background:#f8f9fa;
-    border-radius:10px;
-    border-left:5px solid #dc3545;
+.announcements-title {
+    color: #2563EB;   /* blue */
+    font-weight: 700;
 }
 
-.announcement-title{
-    color:white;
-    background:#dc3545;
-    padding:8px;
-    border-radius:5px;
-    font-weight:bold;
+.announcement-title {
+    color: #DC2626;   /* red */
+    font-weight: bold;
 }
 
-.announcement-content{
-    color:#2c3e50;
-    font-size:16px;
-    font-weight:500;
-    line-height:1.6;
+.announcement-content {
+    color: #2563EB;   /* blue */
 }
