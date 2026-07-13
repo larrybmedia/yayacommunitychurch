@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Portal - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .nav-tabs {
+            border-bottom: none;
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        .nav-link {
+            border: none !important;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 14px;
+            border-radius: 0;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #212529;
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+        .nav-link.active.admin-tab {
+            color: #0d6efd !important;
+            background-color: #fff !important;
+            border-bottom: 3px solid #0d6efd !important;
+        }
+        .nav-link.active.super-tab {
+            color: #dc3545 !important;
+            background-color: #fff !important;
+            border-bottom: 3px solid #dc3545 !important;
+        }
+        .input-group-text {
+            border-right: none;
+        }
+        .form-control {
+            border-left: none;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mb-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'danger' }} py-2 px-3 small border-0 shadow-sm" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <ul class="nav nav-tabs nav-justified" id="portalTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active admin-tab" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin-portal" type="button" role="tab">
+                    <i class="fas fa-user-tie me-2"></i>Admin
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link super-tab" id="super-tab" data-bs-toggle="tab" data-bs-target="#super-portal" type="button" role="tab">
+                    <i class="fas fa-user-shield me-2"></i>Super Admin
+                </button>
+            </li>
+        </ul>
+
+        <div class="card-body p-4 tab-content" id="portalTabsContent">
+
+            <div class="tab-pane fade show active" id="admin-portal" role="tabpanel">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold text-dark mb-1">Admin Identity Portal</h4>
+                    <p class="text-muted small">Log in to manage local branch/parish operations</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('admin.login') }}" autocomplete="off">
+                    <input type="hidden" name="portal_type" value="admin">
+
+                    <div class="mb-3">
+                        <label class="form-label">Username / Email</label>
+                        <input type="text" name="username" class="form-control" autocomplete="off" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label small fw-bold text-secondary">Password</label>
+                            <!-- Redirects to server verification, or a dedicated password reset route if you have one -->
+<a href="{{ url_for('admin.server_verification') }}" class="small text-decoration-none text-primary fw-medium">Forgot Password?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" class="form-control" autocomplete="new-password" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm mt-2">
+                        Sign In Admin <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <p class="small text-muted mb-0">New branch supervisor? <a href="{{ url_for('admin.admin_signup') }}" class="fw-bold text-decoration-none text-primary">Sign Up</a></p>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="super-portal" role="tabpanel">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold text-danger mb-1">Super Admin Portal</h4>
+                    <p class="text-muted small">Global system architecture & structural control</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('admin.login') }}" autocomplete="off">
+                  <input type="hidden" name="portal_type" value="superadmin">
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Master ID Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fas fa-crown text-danger"></i></span>
+                            <input type="text" name="username" class="form-control" autocomplete="off" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label small fw-bold text-secondary">System Key Phrase</label>
+                            <a href="{{ url_for('admin.server_verification') }}" class="small text-decoration-none text-danger fw-medium">Forgot Key?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fas fa-key"></i></span>
+                            <input type="password" name="password" class="form-control" autocomplete="new-password" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100 py-2 fw-bold shadow-sm mt-2">
+                        Access Core Engine <i class="fas fa-shield-alt ms-1"></i>
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <p class="small text-muted mb-0"><i class="fas fa-info-circle me-1"></i>Master credentials are only generated via root infrastructure terminals.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

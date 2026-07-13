@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Dashboard Theme Layout */
+    .admin-header {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #004a99 0%, #002d5c 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 25px;
+        border: none;
+        box-shadow: 0 6px 18px rgba(0, 74, 153, 0.15);
+    }
+    .admin-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .nav-tabs {
+        border-bottom: 2px solid #dee2e6;
+    }
+    .nav-tabs .nav-link {
+        border: none;
+        color: #6c757d;
+        font-weight: 600;
+        padding: 12px 25px;
+        transition: all 0.2s ease;
+    }
+    .nav-tabs .nav-link.active {
+        color: #004a99;
+        border-bottom: 3px solid #004a99;
+        background: transparent;
+    }
+    .super-admin-indicator {
+        border: 2px dashed #dc3545;
+        border-radius: 15px;
+        position: relative;
+    }
+    .super-admin-label {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: #dc3545;
+        color: white;
+        padding: 2px 10px;
+        font-size: 0.7rem;
+        border-radius: 10px;
+        z-index: 10;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+    .form-label-custom {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.4rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+
+    <div class="admin-header d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h1 class="display-6 fw-bold text-dark mb-1">Admin Control Center</h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-user-shield me-2"></i>Logged in as: <strong>{{ current_user.username }}</strong>
+                <span class="badge {% if current_user.role == 'superadmin' %}bg-danger{% else %}bg-primary{% endif %} ms-2">
+                    {{ current_user.role|upper }}
+                </span>
+            </p>
+        </div>
+
+        <div class="mt-3 mt-md-0 d-flex align-items-center flex-wrap gap-2">
+            <!-- LOGOUT AND BACK TO LOGIN LINK -->
+        <div class="mb-3">
+            <!-- Assuming your logout route is named 'admin.logout' -->
+            <a href="{{ url_for('admin.logout') }}" class="text-decoration-none text-muted">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout & Return to Login
+            </a>
+        </div>
+
+            <a href="{{ url_for('admin.post_job') if 'admin.post_job' in backend_endpoints else '#' }}" class="btn btn-outline-primary px-4">
+                <i class="fas fa-briefcase me-2"></i>Post Job
+            </a>
+
+            {% if current_user.role == 'superadmin' %}
+                <a href="{{ url_for('admin.upload_manual') if 'admin.upload_manual' in backend_endpoints else '#' }}" class="btn btn-outline-danger px-4">
+                    <i class="fas fa-upload me-2"></i>Upload Manual
+                </a>
+                <a href="{{ url_for('admin.create_branch') if 'admin.create_branch' in backend_endpoints else '#' }}" class="btn btn-danger px-4">
+                    <i class="fas fa-plus-circle me-2"></i>Add Branch
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if current_user.role == 'superadmin' %}
+    <div class="row mb-5">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-danger text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-globe me-2"></i>Post Global Announcement</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('admin.post_job') if 'admin.post_job' in backend_endpoints else '#' }}" method="POST">
+                        <input type="hidden" name="is_global" value="true">
+                        <div class="mb-3">
+                            <label class="form-label-custom">Headline Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Front Page Headline" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Content Description</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Write global notification details..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 fw-bold">Post to Front Page</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-broadcast-tower me-2"></i>Main Front Page Stream</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('admin.upload_stream') if 'admin.upload_stream' in backend_endpoints else '#' }}" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label-custom">Live URL (YouTube Link)</label>
+                            <input type="url" name="stream_url" class="form-control" placeholder="https://youtube.com/live/..." required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 fw-bold">Update Main Stream</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SIDE-BY-SIDE INTERFACE CARD WRAPPER CONTAINER -->
+    <div class="row mb-5">
+        <!-- SCHEDULE NEW EVENT PANEL -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card h-100 shadow border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-calendar-plus me-2"></i>Schedule New Event</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('admin.post_event') if 'admin.post_event' in backend_endpoints else '#' }}" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label-custom">Event Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Youth Convention 2026" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Date & Target Time</label>
+                                    <input type="datetime-local" name="event_date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Location Venue</label>
+                                    <input type="text" name="location" class="form-control" placeholder="Main Sanctuary Auditorium">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label-custom"><i class="fas fa-image me-1 text-secondary"></i>Attach Event Flyer</label>
+                            <input type="file" name="event_flyer" class="form-control" accept="image/*">
+                            <div class="form-text text-muted small">Upload event graphics (PNG, JPG, or JPEG)</div>
+                        </div>
+
+                        <div class="form-check mb-4 mt-2">
+                            <input type="checkbox" name="is_global" class="form-check-input" id="globalCheck">
+                            <label class="form-check-label small fw-bold text-muted" for="globalCheck">Make Event Global (Visible across all network nodes)</label>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 fw-bold py-2 shadow-sm">Post Calendar Event</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- PARISH STREAM MANAGEMENT GATEWAY (MOVED BESIDE EVENT MANAGEMENT) -->
+        <div class="col-lg-6">
+            <!-- Stream Management Gateway Section -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-dark text-white">
+        <h5><i class="fas fa-broadcast-tower me-2"></i>Parish Stream Management</h5>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('admin.upload_stream') }}" method="POST">
+            <input type="hidden" name="parish_id" value="{{ parish.id }}">
+            
+            <div class="mb-3">
+                <label class="form-label">Stream Title</label>
+                <input type="text" name="stream_title" class="form-control" 
+                       value="{{ parish.stream_title or '' }}" placeholder="Enter Sunday Service Title">
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">YouTube Stream URL</label>
+                <input type="url" name="stream_url" class="form-control" 
+                       value="{{ parish.youtube_link or '' }}" placeholder="https://youtube.com/...">
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">Update Live Stream</button>
+        </form>
+    </div>
+</div>
+    </div>
+
+    <div class="card admin-card shadow-lg {% if current_user.role == 'superadmin' %}super-admin-indicator{% endif %} mb-5">
+        {% if current_user.role == 'superadmin' %}
+            <div class="super-admin-label">SUPER ADMIN CENTRAL MATRIX</div>
+        {% endif %}
+
+        <div class="card-header bg-white pt-4 px-4 border-0">
+            <ul class="nav nav-tabs" id="adminTab" role="tablist">
+                {% if current_user.role == 'superadmin' %}
+                <li class="nav-item">
+                    <button class="nav-link active" id="branches-tab" data-bs-toggle="tab" data-bs-target="#branches" type="button" role="tab">
+                        <i class="fas fa-map-marker-alt me-2"></i>Branches
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="manuals-tab" data-bs-toggle="tab" data-bs-target="#manuals" type="button" role="tab">
+                        <i class="fas fa-file-pdf me-2"></i>Manuals
+                    </button>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <button class="nav-link {% if current_user.role != 'superadmin' %}active{% endif %}" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab">
+                        <i class="fas fa-bullhorn me-2"></i>Ecosystem News
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="apps-tab" data-bs-toggle="tab" data-bs-target="#apps" type="button" role="tab">
+                        <i class="fas fa-users me-2"></i>Applications
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="tab-content" id="adminTabContent">
+
+                {% if current_user.role == 'superadmin' %}
+                <div class="tab-pane fade show active" id="branches" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Branch Name</th>
+                                    <th>Location Venue</th>
+                                    <th class="text-end px-4">Management Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for b in branches %}
+                                <tr>
+                                    <td class="px-4 fw-bold">{{ b.name }}</td>
+                                    <td>{{ b.location }}</td>
+                                    <td class="text-end px-4">
+                                        <a href="{{ url_for('admin.delete_branch', id=b.id) if 'admin.delete_branch' in backend_endpoints else '#' }}" class="text-danger" onclick="return confirm('Confirm permanent branch removal?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="manuals" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Manual Title</th>
+                                    <th>Classification Category</th>
+                                    <th>File Identification Handle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for m in manuals %}
+                                <tr>
+                                    <td class="px-4 fw-bold">{{ m.title }}</td>
+                                    <td><span class="badge bg-info text-dark">{{ m.category }}</span></td>
+                                    <td class="text-muted small">{{ m.filename }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="tab-pane fade {% if current_user.role != 'superadmin' %}show active{% endif %}" id="posts" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Announcement Title</th>
+                                    <th>Distribution Scope</th>
+                                    <th>Content Summary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in posts %}
+                                <tr>
+                                    <td class="px-4 fw-bold">{{ post.title }}</td>
+                                    <td>
+                                        {% if post.is_global %}
+                                        <span class="badge bg-warning text-dark">GLOBAL ARCHITECTURE</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">LOCAL BRANCH</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">{{ post.content[:60] }}...</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="apps" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Applicant Name</th>
+                                    <th>Job Reference Key</th>
+                                    <th>Electronic Email Handle</th>
+                                    <th class="text-end px-4">Resource Link</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr>
+                                    <td class="px-4 fw-bold">{{ app.user_name }}</td>
+                                    <td>#{{ app.job_id }}</td>
+                                    <td>{{ app.user_email }}</td>
+                                    <td class="text-end px-4">
+                                        <a href="{{ url_for('static', filename='uploads/resumes/' + app.resume_filename) }}" class="btn btn-sm btn-primary" target="_blank">
+                                            <i class="fas fa-file-pdf me-1"></i>View PDF
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mt-5">
+        <div class="card-header bg-dark text-white py-3">
+            <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i> Historical Structural Job Openings</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4">Job Placement Title</th>
+                            <th>Affiliated Company Entity</th>
+                            <th>Timestamp Generated</th>
+                            <th class="px-4 text-end">Action Flags</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_jobs %}
+                            {% for job in recent_jobs %}
+                            <tr>
+                                <td class="px-4"><strong>{{ job.title }}</strong></td>
+                                <td>{{ job.company }}</td>
+                                <td>{{ job.created_at.strftime('%Y-%m-%d') if job.created_at else 'N/A' }}</td>
+                                <td class="px-4 text-end">
+                                    <a href="#" class="btn btn-sm btn-outline-danger">Delete Entry</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">No structural metrics or jobs recorded inside systemic logs yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 p-4" style="border-radius: 15px; background: #ffffff;">
+                
+                <h2 class="fw-bold text-dark text-center mb-4">Parish Admin Sign Up ⛪</h2>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, msg in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ msg }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Username</label>
+                        <input type="text" name="username" class="form-control form-control-lg" required placeholder="Choose your identity handle">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Parish Name</label>
+                        <input type="text" name="branch_name" class="form-control form-control-lg" placeholder="e.g. Grace Sanctuary" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Location</label>
+                        <input type="text" name="location" class="form-control form-control-lg" placeholder="Enter Parish Location Venue" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-secondary">Password</label>
+                        <input type="password" name="password" class="form-control form-control-lg" required placeholder="Create secure passcode">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm" style="background: #004a99; border: none;">
+                        Create Account
+                    </button>
+                </form>
+
+                <p class="mt-4 text-center text-muted mb-0">
+                    Already have an account? 
+                    <a href="{{ url_for('admin.login') }}" class="text-primary fw-bold text-decoration-none">Login here</a>
+                </p>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'admin/dashboard_base.html' %}
+
+{% block dashboard_content %}
+<h2 class="mb-4">Welcome back, Administrator</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-users"></i> Total Members</h5>
+                <p class="card-text h3">1,240</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-calendar-check"></i> Upcoming Events</h5>
+                <p class="card-text h3">5</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-video"></i> Live Stream Status</h5>
+                <p class="card-text h3">Offline</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white font-weight-bold">Recent Parish Activity</div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Stream title updated by Admin - 2 hours ago</li>
+            <li class="list-group-item">New member registered - 5 hours ago</li>
+            <li class="list-group-item">Monthly report uploaded - Yesterday</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

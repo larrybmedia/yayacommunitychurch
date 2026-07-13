@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Global Announcements</h2>
+    </div>
+
+    <div class="row">
+        {% for a in announcements %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                {% if a.image_filename %}
+                    <div style="height: 250px; width: 100%; overflow: hidden;">
+                        <img src="{{ url_for('static', filename='uploads/' + a.image_filename) }}" 
+                             class="card-img-top" 
+                             style="width: 100%; height: 100%; object-fit: cover;" 
+                             alt="Announcement Image">
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ a.title }}</h5>
+                    <p class="card-text text-muted small mb-3">
+                        Published: {{ a.date_created.strftime('%Y-%m-%d') if a.date_created else 'N/A' }}
+                    </p>
+                    <p class="card-text">{{ a.content }}</p>
+                    
+                    {% if a.video_url %}
+                        <div class="ratio ratio-16x9 mt-3 rounded overflow-hidden">
+                            <iframe src="{{ a.video_url | youtube_embed }}" 
+                                    title="Video Announcement" 
+                                    allowfullscreen 
+                                    loading="lazy">
+                            </iframe>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">No announcements available at the moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

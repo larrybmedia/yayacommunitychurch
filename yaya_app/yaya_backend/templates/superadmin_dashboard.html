@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- LOGOUT AND BACK TO LOGIN LINK -->
+     <div class="mb-3">
+        <!-- Assuming your logout route is named 'admin.logout' -->
+        <a href="{{ url_for('admin.logout') }}" class="text-decoration-none text-muted">
+            <i class="fas fa-sign-out-alt me-1"></i> Logout & Return to Login
+        </a>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+        <div>
+            <h2 class="font-weight-bold">
+                <i class="fas fa-shield-alt text-danger"></i>
+                Super Admin Command Center
+            </h2>
+            <p class="text-muted mb-0">
+                Manage all branches, admins, jobs, manuals and activities.
+            </p>
+        </div>
+        <span class="badge bg-danger p-2 mt-3 mt-md-0">
+            Global Access
+        </span>
+    </div>
+
+    <!-- Member Statistics Section -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="text-uppercase mb-2">Total Members</h6>
+                <h2 class="mb-0">{{ member_stats.total }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="text-uppercase mb-2">Active Members</h6>
+                <h2 class="mb-0">{{ member_stats.active }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="text-uppercase mb-2">Joined This Month</h6>
+                <h2 class="mb-0">{{ member_stats.this_month }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- QUICK STATS -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-building fa-2x mb-2"></i>
+                    <h6>Total Branches</h6>
+                    <h3>{{ branches|length }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-briefcase fa-2x mb-2"></i>
+                    <h6>Active Jobs</h6>
+                    <h3>{{ jobs_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-2x mb-2"></i>
+                    <h6>Manuals</h6>
+                    <h3>{{ manuals_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-dark text-white shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-history fa-2x mb-2"></i>
+                    <h6>Total Logs</h6>
+                    <h3>{{ logs_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STREAM + ANNOUNCEMENT ACTIONS -->
+    <div class="row mb-4">
+        <!-- LIVE STREAM -->
+        <div class="col-md-6 mb-3">
+            <div class="card border-danger shadow-sm h-100">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-video me-2"></i>Front Page Live Stream
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">
+                        Upload or update the live stream shown on the homepage.
+                    </p>
+                    <form action="{{ url_for('admin.upload_stream') }}" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Stream Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Sunday Worship Service" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">YouTube URL</label>
+                            <input type="text" name="url" class="form-control" placeholder="https://youtube.com/live/..." required>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="fas fa-upload me-2"></i>Upload Live Stream
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLOBAL ANNOUNCEMENT SYSTEM -->
+        <div class="col-md-6 mb-3">
+            <div class="card border-primary shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bullhorn me-2"></i>Global Announcements
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Post system-wide announcements with media attachments.</p>
+
+                    <form action="{{ url_for('admin.create_announcement') }}" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Announcement Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <textarea name="content" class="form-control" rows="3" placeholder="Enter details..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Attach Image/Flyer</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Or YouTube URL</label>
+                            <input type="url" name="youtube_url" class="form-control" placeholder="https://youtube.com/...">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Broadcast Globally
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <!-- Announcements Display -->
+                    <div class="row">
+                        {% for a in all_announcements %}
+                        <div class="col-12 mb-4">
+                            <div class="card shadow-sm h-100">
+                                {% if a.image_filename %}
+                                <div style="height: 200px; width: 100%; overflow: hidden;">
+                                    <img src="{{ url_for('static', filename='uploads/' + a.image_filename) }}" 
+                                         class="card-img-top" 
+                                         style="width: 100%; height: 100%; object-fit: cover;" 
+                                         alt="Announcement Image">
+                                </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ a.title }}</h5>
+                                    <p class="card-text">{{ a.content }}</p>
+                                    {% if a.video_url %}
+                                    <div class="ratio ratio-16x9 mt-3">
+                                        <iframe src="{{ a.video_url }}" allowfullscreen></iframe>
+                                    </div>
+                                    {% endif %}
+                                    <form action="{{ url_for('admin.delete_announcement', id=a.id) }}" method="POST" class="mt-3" onsubmit="return confirm('Are you sure you want to delete this?');">
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">Delete Announcement</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ... Remainder of your page (Management Cards, Manuals, Logs, Admins, Testimonies) remains unchanged ... -->
+
+    <!-- MANAGEMENT CARDS -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-map-marker-alt text-primary me-2"></i>Branch Management</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Create and manage church branches nationwide.</p>
+                    <a href="{{ url_for('admin.create_branch') }}" class="btn btn-primary btn-sm mb-3"><i class="fas fa-plus me-1"></i>Add New Branch</a>
+                    <ul class="list-group list-group-flush">
+                        {% for branch in branches[:5] %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div><strong>{{ branch.name }}</strong><br><small class="text-muted">{{ branch.location }}</small></div>
+                            <a href="{{ url_for('admin.delete_branch', id=branch.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this branch?')"><i class="fas fa-trash"></i></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Global Job Board</h5>
+                </div>
+                <div class="card-body pb-0">
+                    <p class="text-muted">Post opportunities visible to all branches.</p>
+                    <div class="mb-3">
+                        <a href="{{ url_for('admin.post_job') }}" class="btn btn-warning font-weight-bold me-2 text-dark"><i class="fas fa-plus-circle me-1"></i>Post Global Job</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr><th>Job Title</th><th>Branch</th><th>Status</th><th class="text-end">Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for job in approved_jobs %}
+                            <tr>
+                                <td>{{ job.title }}</td>
+                                <td>{{ job.branch.name if job.branch else 'Global' }}</td>
+                                <td><span class="badge bg-success">Approved</span></td>
+                                <td class="text-end">
+                                    <form action="{{ url_for('admin.delete_job', id=job.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete job?')"><i class="fas fa-trash me-1"></i>Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANUALS MANAGEMENT -->
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i>Manage Resource Library</h5>
+                    <a href="{{ url_for('admin.upload_manual') }}" class="btn btn-light btn-sm text-danger font-weight-bold"><i class="fas fa-upload me-1"></i>Upload Manual</a>
+                </div>
+                <div class="card-body">
+                    {% if manuals %}
+                    <table class="table table-hover">
+                        <thead><tr><th>Title</th><th>Category</th><th>Date Added</th><th class="text-end">Actions</th></tr></thead>
+                        <tbody>
+                            {% for manual in manuals %}
+                            <tr>
+                                <td><strong>{{ manual.title }}</strong></td>
+                                <td><span class="badge bg-secondary">{{ manual.category }}</span></td>
+                                <td>{{ manual.date_posted.strftime('%Y-%m-%d') if manual.date_posted else 'N/A' }}</td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('admin.edit_manual', id=manual.id) }}" class="btn btn-sm btn-info me-1 text-white"><i class="fas fa-edit me-1"></i>Edit</a>
+                                    <form action="{{ url_for('admin.delete_manual', id=manual.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete manual?')"><i class="fas fa-trash me-1"></i>Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVITY LOGS -->
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm border-dark">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Global Audit Logs</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Monitor all admin actions and activities.</p>
+                    <a href="{{ url_for('admin.view_logs') }}" class="btn btn-dark w-100">View Full Logs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTERED ADMINS -->
+    <div class="card shadow-sm border-0 mt-2 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-users-cog me-2"></i>Registered Parish Admins</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>#</th><th>Username</th><th>Role</th><th>Parish</th><th>Location</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for admin in admins %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ admin.username }}</strong></td>
+                            <td><span class="badge {{ 'bg-danger' if admin.role == 'superadmin' else 'bg-primary' }}">{{ admin.role }}</span></td>
+                            <td>{{ admin.branch.name if admin.branch else 'No Branch' }}</td>
+                            <td>{{ admin.branch.location if admin.branch else '—' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TESTIMONY MANAGEMENT SYSTEM -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-dark text-white">Manage All Testimonies</div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr><th>Name</th><th>Title</th><th>Content</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for t in all_testimonies %}
+                    <tr>
+                        <td>{{ t.name }}</td>
+                        <td>{{ t.title }}</td>
+                        <td>
+                            {{ t.content | truncate(50) }}<br>
+                            <button type="button" class="btn btn-sm btn-link text-primary p-0" data-bs-toggle="modal" data-bs-target="#contentModal" data-bs-content="{{ t.content }}">View Full</button>
+                        </td>
+                        <td><span class="badge {{ 'bg-success' if t.is_approved else 'bg-warning text-dark' }}">{{ 'Approved' if t.is_approved else 'Pending' }}</span></td>
+                        <td>
+                            {% if not t.is_approved %}
+                            <form action="{{ url_for('admin.approve_testimony', id=t.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            {% endif %}
+                            <form action="{{ url_for('admin.delete_testimony', id=t.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete testimony?')"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modals and Scripts -->
+    <div class="modal fade" id="contentModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Full Testimony</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalContentBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    var contentModal = document.getElementById('contentModal');
+    contentModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget;
+      var fullContent = button.getAttribute('data-bs-content');
+      document.getElementById('modalContentBody').textContent = fullContent;
+    });
+    </script>
+
+</div>
+
+{% endblock %}
